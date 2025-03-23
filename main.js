@@ -37,9 +37,9 @@ const delayBeforeAttraction = 3000; // 新的蓝色小球 3s 内不会被吸附
 
 // 创建黄色线框球体
 function createYellowPlanet(orbitIndex) {
-    const planetGeometry = new THREE.SphereGeometry(1, 12, 12);
+    const planetGeometry = new THREE.SphereGeometry(0.5, 6, 6);
     const planetWireframe = new THREE.WireframeGeometry(planetGeometry);
-    const planetMaterial = new THREE.LineBasicMaterial({ color: 0xffff00 });
+    const planetMaterial = new THREE.LineBasicMaterial({ color: 0xaaaaaa });
 
     const yellowPlanet = new THREE.LineSegments(planetWireframe, planetMaterial);
     scene.add(yellowPlanet);
@@ -137,6 +137,7 @@ function checkAttraction() {
                             activeOrbitIndex--;
                         } else {
                             // resetSystem();
+                            delta=delta+0.1;
                             attachedCount = 0;
                             activeOrbitIndex = 2;
                             isSystemResetting = false;
@@ -188,6 +189,25 @@ window.addEventListener('mousemove', (event) => {
 
         obj.ball.position.copy(camera.position.clone().add(dir.multiplyScalar(distance)));
     });
+    
+    // for (let i = 0; i < starCount; i++) {
+    //     const dx = starPositions[i * 3] - mouse.x;
+    //     const dy = starPositions[i * 3 + 1] - mouse.y;
+    //     const dz = starPositions[i * 3 + 2] - mouse.z;
+    //     const distance = Math.sqrt(dx * dx + dy * dy + dz * dz) + 1e-5;
+
+    //     // 计算爆炸方向
+    //     starVelocities[i * 3] += (dx / distance) * explodeForce * (Math.random() + 0.5);
+    //     starVelocities[i * 3 + 1] += (dy / distance) * explodeForce * (Math.random() + 0.5);
+    //     starVelocities[i * 3 + 2] += (dz / distance) * explodeForce * (Math.random() + 0.5);
+    // }
+});
+let pressed=false;
+window.addEventListener('mousedown', (event) => {
+    pressed=true;
+});
+window.addEventListener('mouseup', (event) => {
+    pressed=false;
 });
 // 初始化
 createYellowPlanet(activeOrbitIndex);
@@ -251,7 +271,7 @@ const starVelocities = new Float32Array(starCount * 3); // 速度数组
 const starBrightness = new Float32Array(starCount);
 const starTexture = new THREE.TextureLoader().load('images/star.png'); // 贴图
 for (let i = 0; i < starCount; i++) {
-    const r = Math.random() * 100 + 50;
+    const r = Math.random() * 40 + 40;
     const theta = Math.random() * Math.PI * 2;
     const phi = Math.acos(2 * Math.random() - 1);
     
@@ -277,8 +297,8 @@ starGeometry.setAttribute('brightness', new THREE.BufferAttribute(starBrightness
 
 // 鼠标排斥力
 let mouse = new THREE.Vector3(0, 0, 0);
-let repelForce = 5; // 鼠标排斥力度
-let explodeForce = 20; // 爆炸力
+let repelForce = 1; // 鼠标排斥力度
+let explodeForce = 5; // 爆炸力
 
 
 // 获取 3D 坐标对应的屏幕坐标
@@ -293,7 +313,7 @@ function getScreenPosition(object) {
     };
 }
 
-// 监听鼠标点击触发爆炸
+// // 监听鼠标点击触发爆炸
 window.addEventListener('click', () => {
     for (let i = 0; i < starCount; i++) {
         const dx = starPositions[i * 3] - mouse.x;
@@ -312,7 +332,8 @@ window.addEventListener('click', () => {
 const starMaterial = new THREE.ShaderMaterial({
     uniforms: {
         time: { value: 0.0 },
-        starTexture: { value: starTexture }
+        starTexture: { value: starTexture },
+        color:  { value: new THREE.Color(0xffffff) }
     },
     vertexShader: `
         attribute float brightness;
@@ -419,10 +440,32 @@ const orbit1 = createOrbit(radius1, angle1);
 const orbit2 = createOrbit(radius2, angle2);
 const orbit3 = createOrbit(radius3, angle3);
 const orbit4 = createOrbit(radius3, -angle3, 0xffc0cb, 0xaa6066);
+let camAngle = 0;
+let delta=0.0;
+const loader = new THREE.TextureLoader();
+loader.load('images/star1.png',
+    function (texture) {
+        console.log('✅ 背景加载成功');
+        scene.background = texture;
+    },
+    undefined,
+    function (err) {
+        console.error('❌ 背景加载失败:', err);
+    }
+);
 
 // 动画循环
 function animate() {
     requestAnimationFrame(animate);
+    if(!pressed){
+        camAngle += 0.002; // 控制旋转速度
+        const camRadius = 20; // 摄像机绕的半径
+        
+        camera.position.x = Math.cos(camAngle) * camRadius;
+        camera.position.z = Math.sin(camAngle) * camRadius;
+        camera.lookAt(new THREE.Vector3(0, 0, 0));
+    }
+    
 
 
     // 更新星星闪烁时间
@@ -440,10 +483,11 @@ function animate() {
         const distance = Math.sqrt(dx * dx + dy * dy + dz * dz) + 1e-5;
 
         // 鼠标排斥力
-        const force = repelForce / (distance * distance);
-        velocities[i * 3] += (dx / distance) * force;
-        velocities[i * 3 + 1] += (dy / distance) * force;
-        velocities[i * 3 + 2] += (dz / distance) * force;
+        // const force = repelForce/100.0;
+        // velocities[i * 3] += (dx / distance) * force;
+        // velocities[i * 3 + 1] += (dy / distance) * force;
+        // velocities[i * 3 + 2] += (dz / distance) * force;
+        
 
         // 位置更新
         positions[i * 3] += velocities[i * 3] * 0.1;
@@ -451,16 +495,16 @@ function animate() {
         positions[i * 3 + 2] += velocities[i * 3 + 2] * 0.1;
 
         // 逐渐让速度衰减（模拟阻力）
-        velocities[i * 3] *= 0.98;
-        velocities[i * 3 + 1] *= 0.98;
-        velocities[i * 3 + 2] *= 0.98;
+        velocities[i * 3] *= 0.99;
+        velocities[i * 3 + 1] *= 0.99;
+        velocities[i * 3 + 2] *= 0.99;
 
         // 远离中心太远的星星逐渐吸引回原位
         const initialDistance = 100;
         if (Math.sqrt(positions[i * 3] ** 2 + positions[i * 3 + 1] ** 2 + positions[i * 3 + 2] ** 2) > initialDistance) {
-            velocities[i * 3] -= positions[i * 3] * 0.0005;
-            velocities[i * 3 + 1] -= positions[i * 3 + 1] * 0.0005;
-            velocities[i * 3 + 2] -= positions[i * 3 + 2] * 0.0005;
+            velocities[i * 3] -= positions[i * 3] * 0.005;
+            velocities[i * 3 + 1] -= positions[i * 3 + 1] * 0.005;
+            velocities[i * 3 + 2] -= positions[i * 3 + 2] * 0.005;
         }
     }
 
@@ -477,7 +521,7 @@ function animate() {
     
     yellowPlanets.forEach((obj) => {
         let index=obj.index;
-        obj.angle += 0.02*(1+index);
+        obj.angle += 0.02*(1+index+delta);
         obj.planet.position.set(
             Math.cos(obj.angle) * obj.orbitRadius,
             Math.sin(obj.angle) * obj.orbitRadius * Math.tan(obj.orbitTilt),
