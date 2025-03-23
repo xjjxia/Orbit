@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ThreeJSHands</title>
-
-    <video class="input_video"></video>
     <script type="importmap">
         {
             "imports": {
@@ -15,18 +13,23 @@
             }
         }
     </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin=""></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin=""></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin=""></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin=""></script>
-
+    <style>
+        html, body {
+          margin: 0;
+          padding: 0;
+          overflow: hidden; /* 🚫 禁止滚动条 */
+          width: 100%;
+          height: 100%;
+        }
+      
+        canvas {
+          display: block; /* 防止 inline 元素造成额外空隙 */
+        }
+      </style>
+      
     
 </head>
 <body>
-    <div class="container">
-        <!-- <video class="input_video" hidden = "true" ></video> -->
-    </div>
     <script type="module">
     import * as three from "three"
     import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
