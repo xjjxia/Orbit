@@ -5,9 +5,11 @@ import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 // 创建场景、相机、渲染器
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
 document.body.appendChild(renderer.domElement);
+
 
 // 轨道控制器（允许鼠标拖拽视角）
 const controls = new OrbitControls(camera, renderer.domElement);
@@ -34,7 +36,12 @@ let activeOrbitIndex = 2;
 let attachedCount = 0;
 let isSystemResetting = false;
 const delayBeforeAttraction = 3000; // 新的蓝色小球 3s 内不会被吸附
-
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+  
 // 创建黄色线框球体
 function createYellowPlanet(orbitIndex) {
     const planetGeometry = new THREE.SphereGeometry(0.5, 6, 6);
