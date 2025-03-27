@@ -21,9 +21,27 @@
           width: 100%;
           height: 100%;
         }
-      
+        #bg {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          background-image: url('images/star1.png');
+          background-size: cover;     /* 🚨 拉伸填充，可能裁切但不留白 */
+          background-position: center;
+          background-repeat: no-repeat;
+          z-index: -1;                /* 🔽 放在 canvas 后面 */
+        }
+
         canvas {
-          display: block; /* 防止 inline 元素造成额外空隙 */
+          display: block;
+          width: 100vw;
+          height: 100vh;
+          position: fixed;
+          top: 0;
+          left: 0;
+          z-index: 0;
         }
       </style>
       
