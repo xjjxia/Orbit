@@ -14,45 +14,48 @@
         }
     </script>
     <style>
-        html, body {
-          margin: 0;
-          padding: 0;
-          overflow: hidden; /* 🚫 禁止滚动条 */
-          width: 100%;
-          height: 100%;
-          background-image: url('/Orbit/images/background.jpg');
-          background-size: cover; /* 确保图片覆盖整个屏幕 */
-          background-position: center; /* 图片居中显示 */
-          background-repeat: no-repeat; /* 防止图片重复 *
-        }
-        bg {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100vw;
-          height: 100vh;
-          background-image: url('/Orbit/images/background.jpg');
+      html, body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        height: 100%;
+        width: 100%;
+      }
 
-          background-size: cover;     /* 🚨 拉伸填充，可能裁切但不留白 */
-          background-position: center;
-          background-repeat: no-repeat;
-          z-index: -1;                /* 🔽 放在 canvas 后面 */
-        }
+      /* 背景图层 */
+      #bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-image: url('./images/star1.png'); /* 图片路径 */
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
 
-        canvas {
-          display: block;
-          width: 100vw;
-          height: 100vh;
-          position: fixed;
-          top: 0;
-          left: 0;
-          z-index: 0;
-        }
+        opacity: 0.7;              /* ✅ 透明度调整 */
+        filter: brightness(1.2)    /* ✅ 增亮发光感 */
+                drop-shadow(0 0 40px #fff); /* ✅ 发光轮廓 */
+        z-index: -1;
+      }
+
+      /* three.js canvas */
+      canvas {
+        display: block;
+        width: 100vw;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 0;
+      }
       </style>
       
     
 </head>
 <body>
+    <div id="bg"></div>
     <script type="module">
     import * as three from "three"
     import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
