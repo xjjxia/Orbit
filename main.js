@@ -131,7 +131,7 @@ function checkAttraction() {
                 const dy = blueBallScreenPos.y - planetScreenPos.y;
                 const screenDistance = Math.sqrt(dx * dx + dy * dy);
 
-                if (screenDistance < 50) {
+                if (screenDistance < 30) {
                     // 吸附
                     obj.hasAttached = true;
                     blueObj.isAttached = true;
@@ -450,17 +450,17 @@ const orbit3 = createOrbit(radius3, angle3);
 const orbit4 = createOrbit(radius3, -angle3, 0xffc0cb, 0xaa6066);
 let camAngle = 0;
 let delta=0.0;
-const loader = new THREE.TextureLoader();
-loader.load('images/star1.png',
-    function (texture) {
-        console.log('✅ 背景加载成功');
-        scene.background = texture;
-    },
-    undefined,
-    function (err) {
-        console.error('❌ 背景加载失败:', err);
-    }
-);
+// const loader = new THREE.TextureLoader();
+// loader.load('images/star1.png',
+//     function (texture) {
+//         console.log('✅ 背景加载成功');
+//         scene.background = texture;
+//     },
+//     undefined,
+//     function (err) {
+//         console.error('❌ 背景加载失败:', err);
+//     }
+// );
 
 // 动画循环
 function animate() {
