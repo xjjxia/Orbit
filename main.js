@@ -42,6 +42,7 @@ window.addEventListener('resize', () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
   
+
 // 创建黄色线框球体
 function createYellowPlanet(orbitIndex) {
     const planetGeometry = new THREE.SphereGeometry(0.5, 6, 6);
