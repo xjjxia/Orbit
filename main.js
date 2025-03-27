@@ -131,7 +131,7 @@ function checkAttraction() {
                 const dy = blueBallScreenPos.y - planetScreenPos.y;
                 const screenDistance = Math.sqrt(dx * dx + dy * dy);
 
-                if (screenDistance < 30) {
+                if (screenDistance < 20) {
                     // 吸附
                     obj.hasAttached = true;
                     blueObj.isAttached = true;
